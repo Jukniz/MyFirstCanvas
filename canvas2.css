@@ -4,19 +4,13 @@ background-color:#c6eae0;
 }
 
 .sonido{
-width:150px;
+
 }
 #canvas{
-
-     width: 800px;
-    height: 600px;
-    position:absolute;
-  left: 50%;
-  top: 50%;
-  margin-left: -400px;
-  margin-top: -300px;
-    border:1px solid #000;
-    background-image: url(./Resources/fondocasa.jpg);
+display:block;
+margin:0 auto 0 auto;
+border:1px solid #000;
+background-image: url(./Resources/fondocasa.jpg);
 }
 
 

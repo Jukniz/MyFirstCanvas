@@ -1,21 +1,49 @@
+function Rectangle(x,y,width,height){
+ this.x=(x==null)?0:x;
+ this.y=(y==null)?0:y;
+ this.width=(width==null)?0:width;
+ this.height=(height==null)?this.width:height;
+
+ this.intersects=function(rect){
+  if(rect!=null){
+   return(this.x<rect.x+rect.width&&
+    this.x+this.width>rect.x&&
+    this.y<rect.y+rect.height&&
+    this.y+this.height>rect.y);
+  }
+ }
+}
+
+function random(max){
+ return parseInt(Math.random()*max);
+}
+
+
 window.addEventListener('load',init,false);
 var canvas=null,ctx=null;
-var x=50,y=50;
 var lastKey=null;
 var PAUSE=true;
 var PRESSING=new Array();
-var img = new Image();
-img.src =  "Resources/finnandjake.png";
+var score=0;
+var body=new Rectangle(50,50,84,115);
+var enemy=new Rectangle(300,300,66,85);
+var finnandjake = new Image();
+finnandjake.src =  "Resources/finnandjake.png";
+var iceking = new Image();
+iceking.src =  "Resources/Original_Ice_King.png";
+
+var food=new Rectangle(80,80,10,10);
 function init(){
  canvas=document.getElementById('canvas');
  ctx=canvas.getContext('2d');
+ ctx.font="40px calibri";
  run();
 }
 
 
 
 function run(){
- setTimeout(run,50);
+ setTimeout(run,10);
  game();
  paint(ctx);
 }
@@ -24,24 +52,31 @@ function game(){
  if(!PAUSE){
   // Move Rect
   if(PRESSING[38] || PRESSING[87]) //UP
-   y-=5;
+   body.y-=5;
   if(PRESSING[39] || PRESSING[68]) //RIGHT
-   x+=5;
+  body.x+=5;
   if(PRESSING[40] || PRESSING[83]) //DOWN
-   y+=5;
+   body.y+=5;
   if(PRESSING[37] || PRESSING[65]) //LEFT
-   x-=5;
+   body.x-=5;
 
   // Out Screen
-  if(x>canvas.width)
-   x=0;
-  if(y>canvas.height)
-   y=0;
-  if(x<0)
-   x=canvas.width;
-  if(y<0)
-   y=canvas.height;
+  if(body.x>canvas.width)
+   body.x=0;
+  if(body.y>canvas.height)
+   body.y=0;
+  if(body.x<-84)
+   body.x=canvas.width;
+  if(body.y<-115)
+   body.y=canvas.height;
  }
+ //interaccion
+ if(body.intersects(enemy)){
+   score++;
+   enemy.x=random((canvas.width-66)/10-1)*10;
+   enemy.y=random((canvas.height-85)/10-1)*10;
+  }
+ 
  // Pause/Unpause
  if(lastKey==13){
   PAUSE=!PAUSE;
@@ -51,12 +86,14 @@ function game(){
 
 function paint(ctx){
  ctx.clearRect(0,0,canvas.width,canvas.height);
-  ctx.drawImage(img,x,y, 40, 40);
+  ctx.drawImage(iceking,enemy.x,enemy.y, 66, 85);
+  ctx.drawImage(finnandjake,body.x,body.y, 84, 115);
+ ctx.fillText('Score: '+score,20,40);
  ctx.fillStyle='#0f0';
  ctx.fillStyle='#fff';
  //ctx.fillText('Last Key: '+lastKey,0,20);
  if(PAUSE)
-  ctx.fillText('PAUSE',140,75);
+  ctx.fillText('PAUSE',350,320);
 }
 
 document.addEventListener('keydown',function(evt){
