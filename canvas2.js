@@ -18,6 +18,14 @@ function random(max){
  return parseInt(Math.random()*max);
 }
 
+function reset(){
+ score=0;
+ time=6000;
+ timeout=60;
+ GAMEOVER=false;
+ body=new Rectangle(50,50,84,115);
+ enemy=new Rectangle(300,300,66,85);
+}
 
 window.addEventListener('load',init,false);
 var canvas=null,ctx=null;
@@ -31,11 +39,15 @@ var timeout=60;
 var body=new Rectangle(50,50,84,115);
 var enemy=new Rectangle(300,300,66,85);
 var finnandjake = new Image();
-finnandjake.src =  "Resources/finnandjake.png";
 var iceking = new Image();
-iceking.src =  "Resources/Original_Ice_King.png";
-
+var aEat=new Audio();
+var aDie=new Audio();
 var food=new Rectangle(80,80,10,10);
+finnandjake.src =  "Resources/finnandjake.png";
+iceking.src =  "Resources/Original_Ice_King.png";
+aEat.src='Resources/chomp.m4a';
+aDie.src='Resources/dies.m4a';
+
 function init(){
  canvas=document.getElementById('canvas');
  ctx=canvas.getContext('2d');
@@ -73,14 +85,22 @@ function game(){
   if(body.y<-115)
    body.y=canvas.height;
  }
+ 
  //interaccion
  if(body.intersects(enemy)){
    score++;
    enemy.x=random((canvas.width-66)/10-1)*10;
    enemy.y=random((canvas.height-85)/10-1)*10;
+   aEat.play();
   }
- if(timeout==0){
-    GAMEOVER=true;   
+  
+   if(GAMEOVER && lastKey==13){
+     reset();
+ }
+  
+ if(timeout==0 && !GAMEOVER){
+    GAMEOVER=true;
+    aDie.play();
   }
  if(!PAUSE && timeout>0){
  time--;
@@ -88,7 +108,7 @@ function game(){
  //time=(time/100).toFixed(0);
   }
  // Pause/Unpause
- if(lastKey==13){
+ if(lastKey==13 && !GAMEOVER){
   PAUSE=!PAUSE;
   lastKey=null;
  }
@@ -103,7 +123,7 @@ function paint(ctx){
  ctx.fillStyle='#fff';
  //ctx.fillText('Last Key: '+lastKey,0,20);
     
- if(PAUSE){
+ if(PAUSE && !GAMEOVER){
   ctx.fillText('PAUSE',350,320);
  }
   
