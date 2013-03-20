@@ -14,6 +14,31 @@ function Rectangle(x,y,width,height){
  }
 }
 
+
+
+  // assume we are already logged in
+
+
+      function postToFeed() {
+        FB.init({appId: "276532112479141", status: true, cookie: true});
+        // calling the API ...
+        var obj = {
+          method: 'feed',
+          redirect_uri: 'https://polar-coast-7569.herokuapp.com/',
+          link: 'https://developers.facebook.com/docs/reference/dialogs/',
+          picture: 'http://2.bp.blogspot.com/-FWafoHDOqzc/UKVF4LgqZUI/AAAAAAAABZM/9b1K7GhJvHc/s1600/Jake.jpg',
+          name: 'Adventure Time',
+          caption: 'Adventure Time Game',
+          description: 'Ha conseguido una puntuación de: '+score+' puntos.'
+        };
+
+        function callback(response) {
+          document.getElementById('msg').innerHTML = "Post ID: " + response['post_id'];
+        }
+
+        FB.ui(obj, callback);
+      }
+  
 function random(max){
  return parseInt(Math.random()*max);
 }
@@ -101,6 +126,7 @@ function game(){
  if(timeout==0 && !GAMEOVER){
     GAMEOVER=true;
     aDie.play();
+    postToFeed();
   }
  if(!PAUSE && timeout>0){
  time--;
