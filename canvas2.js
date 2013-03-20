@@ -20,7 +20,7 @@ function Rectangle(x,y,width,height){
 
 
       function postToFeed() {
-        FB.init({appId: "276532112479141", status: true, cookie: true});
+       
         // calling the API ...
         var obj = {
           method: 'feed',
@@ -74,6 +74,7 @@ aEat.src='Resources/chomp.m4a';
 aDie.src='Resources/dies.m4a';
 
 function init(){
+ FB.init({appId: "276532112479141", status: true, cookie: true});
  canvas=document.getElementById('canvas');
  ctx=canvas.getContext('2d');
  ctx.font="40px calibri";
